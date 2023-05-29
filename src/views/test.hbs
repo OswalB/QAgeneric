@@ -1,0 +1,24 @@
+<h1>{{panel.admin}}</h1>
+
+
+
+
+
+
+
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded',async() =>{
+        filterPag.myClientes=false;
+      currentKeys =[{campo: 'client', alias: 'Cliente', tipo: 'string'},
+                    {campo: 'delivery', alias: 'Fecha entrega', tipo: 'string'}
+      ];
+      filterPag.modelo = 'Order';  
+    })
+
+
+    function renderTable(){
+        console.log("renderTable");
+    } 
+</script>

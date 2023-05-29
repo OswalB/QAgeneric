@@ -1,0 +1,170 @@
+<hr>
+<div id="footer_container">
+  <label id="lbl_results"></label>
+  <div aria-label="Page navigation">
+    <ul class="pagination" id="pagination_container">
+
+    </ul>
+  </div>
+</div>
+<script>
+    //------pagination and filter code---------
+      let currentPage = 1, sizeCollection = 0, filterPag ={}, currentCollection = [];
+        let itemsPagina = 10;
+      let currentKeys, currentContent, role = '';
+
+    document.getElementById('pagination_container').addEventListener('click',async e =>{
+        let i =e.target.getAttribute('_id');
+        currentPage = i; 
+        ServicePag.footer(); 
+        renderTable(); 
+    })
+
+    document.getElementById('btn-refrescar').addEventListener('click',async e =>{
+        currentPage =1
+        ServicePag.footer(); 
+        renderTable(); 
+    })
+
+    document.getElementById('form-filtro').addEventListener('change',async e =>{
+        ServicePag.loadFilter(true)
+        console.log(filterPag)
+
+    })
+
+    document.getElementById('in_search').addEventListener('change',async e =>{
+        filterPag.filterTxt = document.getElementById('in_search').value;
+    })
+
+    document.addEventListener('DOMContentLoaded',async() =>{
+        await init();
+        ServicePag = new Servicio;
+        ServicePag.loadFilter(false);
+        document.getElementById('in-itempag').value = itemsPagina;
+        
+    
+        ServicePag.renderFilter();
+        //Service.loadList();
+        //init();
+        await ServicePag.footer();
+        
+        await renderTable(); 
+    })
+
+
+class Servicio{
+    async renderFilter() {
+        let container = document.getElementById('ordenpor');
+        container.innerHTML = '';
+        let op = document.createElement('option');
+        let i= 0;
+        op.setAttribute("value",0);
+        op.innerHTML = 'Ninguno';
+        container.appendChild(op);
+            currentKeys.forEach(item =>{
+            op = document.createElement('option');
+            
+            op.setAttribute("value",item.campo);
+            op.innerHTML= `${item.alias}`;
+            container.appendChild(op);
+        });
+        container = document.getElementById('filtroPor');
+        container.innerHTML = '';
+        op = document.createElement('option');
+        i= 0;
+        op.setAttribute("value",0);
+        op.innerHTML = 'Ninguno';
+        container.appendChild(op);
+            currentKeys.forEach(item =>{
+            op = document.createElement('option');
+            i++;
+            op.setAttribute("value",item.campo);
+            op.innerHTML= `${item.alias}`;
+            container.appendChild(op);
+        });
+    }
+
+
+    async footer(){
+        filterPag.saltar = (currentPage - 1) * itemsPagina;
+        filterPag.limitar = itemsPagina;
+      //consultar tamaño de coleccion
+        let response = await fetch("/api/gen_count",{
+            headers: {'content-type': 'application/json'},
+            method: 'POST',
+            body: JSON.stringify(filterPag)
+        })
+        let data = await response.json();
+        sizeCollection = data[0].countTotal;
+        
+        
+        let winL, winR, winMax;
+        let pags = Math.trunc(sizeCollection/itemsPagina);
+        if(sizeCollection%itemsPagina != 0){pags += 1;}
+        document.getElementById('lbl_results').innerHTML=`Resultados: ${sizeCollection}`;
+        const pagContainer = document.getElementById('pagination_container');
+        pagContainer.innerHTML='';
+        if(currentPage<(pags-2)){winL = currentPage-2;}
+        else{winL = pags-5;}
+        if(winL < 2 || pags < 8 ){winL = 2;}
+        winR= winL+4;
+        if(winR>(pags-1)){winR=pags-1}
+        if(pags > 0){this.addPag(pagContainer,1,currentPage);}
+        if(winL > 2){this.addPag(pagContainer,0,currentPage);}
+        for(let i = winL; i<= winR; i++){
+            this.addPag(pagContainer,i,currentPage);
+        }
+        if(pags - winR  > 1){this.addPag(pagContainer,0,currentPage);}
+        if(pags > 1){this.addPag(pagContainer,pags,currentPage);}
+    }
+
+    addPag(pagContainer,i){
+        
+        const lipag = document.createElement('li');
+        let clase = 'page-item';
+        if(i==currentPage){clase += ' active';}
+        lipag.setAttribute('class', clase);
+        if(i==0){
+            lipag.innerHTML = `<label class="px-2"> ... </label>`;
+        }else{
+            lipag.innerHTML = `<a class="page-link " _id=${i} href="#" id="page${i}">${i}</a>`;
+        }
+        pagContainer.appendChild(lipag);
+    }
+
+    loadFilter(load){
+        if(load){
+            itemsPagina = parseInt(document.getElementById('in-itempag').value);
+            filterPag.limitar = itemsPagina;
+            let select = document.getElementById("ordenpor");
+            
+            let options=document.getElementsByTagName("option");
+            filterPag.sortBy = '';
+            if(select.value != "0"){
+                filterPag.sortBy = select.value;
+            }
+            filterPag.sortAsc = true;
+            if(document.getElementById('checkDsc').checked){
+                filterPag.sortAsc = false;
+            }
+            select = document.getElementById("filtroPor");
+            options=document.getElementsByTagName("option");
+            filterPag.filterBy = '';
+            if(select.value != "0"){
+                filterPag.filterBy = select.value;
+            }
+        }else{
+            
+            document.getElementById('checkAsc').checked = true;
+            document.getElementById('in_search').value='';
+            filterPag.filterTxt = '';
+            filterPag.filterBy = '';
+            filterPag.sortBy = '';
+            filterPag.sortAsc = true;
+            filterPag.saltar = (currentPage - 1) * itemsPagina;
+            filterPag.limitar = itemsPagina;
+        }
+        
+    }
+}
+</script>

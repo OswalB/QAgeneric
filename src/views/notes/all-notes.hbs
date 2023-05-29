@@ -1,0 +1,21 @@
+
+<div class="row"  id = "container">
+    
+    {{#each notes}}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title d-flex justify-content-between align-items-center">
+                        {{title}} <a id = "btnEditar" href="#" _id ={{_id}} role="btn_edit" ><i class="fa fa-pencil" role="btn_edit" _id = {{_id}}></i></a>
+                    </h4>
+                    <p>{{description}}</p>
+                    
+                    <a id="btnBorrar" class="btn btn-danger" href="#" _id = {{_id}} role="btn_del" >Delete</a>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    
+</div>
+
+<script src="/js/notes.js"></script>
