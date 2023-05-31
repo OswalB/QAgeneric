@@ -1,4 +1,4 @@
-console.log("codigo...")
+
 document.getElementById('container').addEventListener('click',async e =>{
     let __id = e.target.getAttribute('_id');
     let role = e.target.getAttribute('role');
@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded',async() =>{
      
     currentKeys =[{campo: 'nombre', alias: 'Prodcto', tipo: 'string'},
     {campo: 'codigoProd', alias: 'Codigo', tipo: 'string'}]; 
+
+    test();
     
 })
 function init(){
