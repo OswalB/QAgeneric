@@ -134,27 +134,31 @@ document.getElementById('listDocuments').addEventListener('click',async e =>{
     //currentCollection.saltar = (currentPage - 1) * itemsPagina;
     //currentCollection.limitar = itemsPagina;
     filterPag.modelo = m;
-    
+
     let boton = document.getElementById('btnChose');
     boton.innerHTML = t;
     await renderTable();
     //Service.loadFilter(false);
-    ServicePag.loadFilter(false);
-    await ServicePag.renderFilter();
+    setFilter('config');
+    //await ServicePag.renderFilter();
     
     
     
-    await ServicePag.footer();
+    await footer();
 })
 
 document.addEventListener('DOMContentLoaded',async() =>{
-    currentKeys =[{campo: 'client', alias: 'Cliente', tipo: 'string'}];
+    //currentKeys =[{campo: 'client', alias: 'Cliente', tipo: 'string'}];
     //filterPag.modelo = '';
         await loadList();
 })
 
 
-function init(){}
+async function init(){
+    page.szItems=11
+
+
+}
 
 async function renderModal(){
     const cambio = document.getElementById('btn_reset');
