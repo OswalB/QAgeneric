@@ -1,4 +1,3 @@
-//let userId;
 document.getElementById('btn-download').addEventListener('click', async e =>{
     xlsDowload();
  });
@@ -26,7 +25,6 @@ document.getElementById('btn-download').addEventListener('click', async e =>{
 
 
 document.getElementById("btn_borrar").addEventListener('click',async e =>{
-    let submit = document.getElementsByClassName("form-control");
     let objeto = new Object();
     objeto._id = currentDocumentId;
     objeto.modelo = currentCollection.modelo;
@@ -45,11 +43,8 @@ document.getElementById("btn_borrar").addEventListener('click',async e =>{
 });
 
 document.getElementById("btn_reset").addEventListener('click',async e =>{
-    let idt = e.target.getAttribute('_id');
     result = window.confirm('Seguro que desea cambiar el PASSWORD?');
     if(!result) return;
-    console.log('reset', userId)
-    
     const res = await fetch('/terceros/reset_passadmin', {    
             headers: {
                 'Content-Type': 'application/json'
@@ -118,10 +113,8 @@ document.getElementById('bodyContainer').addEventListener('dblclick',async e =>{
     userId = idt;
     role = 'edit';
     currentDocumentId = idt;
-    
     let titulo = document.getElementById('modal-title');
     titulo.innerHTML = `Editar ${currentCollection.titulo}` ;
-    
     renderModal();
     
 });
@@ -131,34 +124,20 @@ document.getElementById('listDocuments').addEventListener('click',async e =>{
     let m =e.target.getAttribute('_modelo');
     let t =e.target.getAttribute('_titulo');
     currentCollection ={"titulo":t, "modelo":m};
-    //currentCollection.saltar = (currentPage - 1) * itemsPagina;
-    //currentCollection.limitar = itemsPagina;
     filterPag.modelo = m;
-
     let boton = document.getElementById('btnChose');
     boton.innerHTML = t;
     await renderTable();
-    //Service.loadFilter(false);
     setFilter('config');
-    //await ServicePag.renderFilter();
-    
-    
-    
     await footer();
 })
 
-document.addEventListener('DOMContentLoaded',async() =>{
-    //currentKeys =[{campo: 'client', alias: 'Cliente', tipo: 'string'}];
-    //filterPag.modelo = '';
-        await loadList();
-})
-
-
 async function init(){
-    page.szItems=11
-
-
+    page.szItems=10
+    await loadList();
 }
+
+function afterLoad(){}
 
 async function renderModal(){
     const cambio = document.getElementById('btn_reset');
@@ -170,7 +149,7 @@ async function renderModal(){
     let ind = 0;
     if(role =='edit') {
         document.getElementById('btn_borrar').style.display = '';
-        for(let j=0;j<itemsPagina;j++){
+        for(let j=0;j<page.szItems;j++){
             if(currentDocumentId == currentContent[j]._id){
                 ind = j; 
                 break;
@@ -194,9 +173,6 @@ async function renderModal(){
             
             contenido = '';
         }
-        
-        
-        
         const tr = document.createElement('tr');
         if(role == 'edit'){
             let codigo = `currentContent[ind].${item.campo}`;       //se concatena como texto y se ejecuta mediante eval()
@@ -235,20 +211,16 @@ async function loadList(){
 }
 
 async function renderTable(){
-    console.log("renderTable");
     let response = await fetch("/editor/keys",{
         headers: {'content-type': 'application/json'},
         method: 'POST',
         body: JSON.stringify(filterPag)
     })
-    
     let data = await response.json();
-    
     if(data.fail){
         toastr.error(data.message);
         return;
     }
-    
     currentKeys = data;
     const container = document.getElementById('encabezado');
     container.innerHTML = '';
@@ -278,7 +250,6 @@ async function renderTable(){
     bodyContainer.innerHTML = '';
     dataList.forEach(item => {
         const tr = document.createElement('tr');
-        //tr.setAttribute("_id",item._id)
         tr.id = item._id;
         bodyContainer.appendChild(tr);
     })
@@ -314,14 +285,11 @@ async function xlsDowload() {
         let nalias = `"${item.alias}":`;
         str = str.replace(ncampo, nalias);
     })
-    //str = str.replace(/\"_id\":/g, "\"id\":");
     let newContent = JSON.parse(str);
     console.log(newContent);
     
     var copy = [];
     for (const element of newContent) {
-        //const { nombre, idClient, idSeller} = element;
-        
         copy.push(element);
     }
     
@@ -352,7 +320,6 @@ async function xlsUpload(){
             let nalias = `"${item.campo}":`;
             str = str.replace(ncampo, nalias);
         })
-    //str = str.replace(/\"_id\":/g, "\"id\":");
     let newContent = JSON.parse(str);
     console.log(newContent);
         const res = await fetch('/editor/update', {    

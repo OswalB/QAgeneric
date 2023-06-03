@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await init();
     setFilter('config');
     await footer();
-
+    afterLoad();
     //await renderTable();
 })
 
