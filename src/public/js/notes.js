@@ -38,15 +38,10 @@ document.addEventListener('DOMContentLoaded',async() =>{
      
     currentKeys =[{campo: 'nombre', alias: 'Prodcto', tipo: 'string'},
     {campo: 'codigoProd', alias: 'Codigo', tipo: 'string'}]; 
-
-    test();
     
 })
 function init(){
-    document.getElementById('ordenpor').value='codigoProd';
-    filterPag.sortBy ='codigoProd';
-    document.getElementById('checkDsc').checked=true;
-    filterPag.sortAsc = false;
+    document.getElementById('title-main').innerHTML='El Mana - notes'
 }
 
 function renderTable(){}

@@ -87,7 +87,8 @@ const PlanillaSchema = new Schema({
             type: 'String'
         },
         compuesto:{
-            type: 'Boolean'
+            type: 'Boolean',
+            default: false
         },
         vence:{
             type:'Date'

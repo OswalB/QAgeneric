@@ -133,6 +133,7 @@ document.getElementById('listDocuments').addEventListener('click',async e =>{
 })
 
 async function init(){
+    document.getElementById('title-main').innerHTML='El Mana - Editor'
     page.szItems=10
     await loadList();
 }

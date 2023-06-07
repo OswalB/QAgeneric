@@ -272,32 +272,42 @@ document.getElementById('inLote').addEventListener('change',async e => {
 //---------funciones
 
 async function init(){
-    document.getElementById('ordenpor').value='createdAt';
-    filterPag.sortBy ='createdAt';
-    document.getElementById('checkDsc').checked=true;
-    filterPag.sortAsc = false;
+    document.getElementById('title-main').innerHTML='El Mana - Almacen'
+    page.szItems = 15;
+    page.ordenPor = 'createdAt';
+    page.sortAsc = false;
+    page.filterBy = '0';
+    page.filterTxt = '';
+
+
+    //document.getElementById('ordenpor').value='createdAt';
+    //filterPag.sortBy ='createdAt';
+    //document.getElementById('checkDsc').checked=true;
+    //filterPag.sortAsc = false;
 
     setPaso(0); 
     filterPag.modelo = 'Inalmacen'; 
     //filterPag.nofact=true;
-    filterPag.saltar=0;
-    filterPag.limitar=15;
-    filterPag.sortBy = 'createdAt';
-    filterPag.sortAsc = false;
+    //filterPag.saltar=0;
+    //filterPag.limitar=15;
+    //filterPag.sortBy = 'createdAt';
+    //filterPag.sortAsc = false;
     currentKeys =[{campo: 'nombreProveedor', alias: 'Proveedor', tipo: 'string'},
     {campo: 'createdAt', alias: 'Fecha', tipo: 'date'}];
     
-    document.getElementById('ordenpor').value='createdAt';
+    //document.getElementById('ordenpor').value='createdAt';
     
     
     await loadlistas();
     renderProveedores('');
     renderInsumos();
 
-
+    renderTable()
 
 
 }
+
+function afterLoad(){}
 
 function setPaso(paso){
     let state = '';

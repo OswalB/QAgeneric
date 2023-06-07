@@ -820,10 +820,37 @@ apiCtrl.getPipeline  = async(req, res) => {
     }
   }
 
+apiCtrl.getPool  = async(req, res) => {
+  try {
+    const lote = req.body.lote;
+    let pipeline = [
+      {
+        '$match': {
+          'loteOut': lote
+        }
+      }, {
+        '$project': {
+          'lotesPool': 1
+        }
+      }
+    ];
+    let aggRes = await Planilla.aggregate(pipeline);
+    res.json(aggRes);
+
+  }catch(e){
+    fx.errorlog('getPool',JSON.stringify(req.body), e, req.user);
+    let result = [];
+    result.push({"fail" : true});
+    res.json(result);
+    console.log(e);
+}
+}
+  
+
 apiCtrl.getLotes  = async(req, res) => {
   try {
 const codigo = req.body.codigo
-console.log(req.body  )
+//console.log(req.body  )
   let pipeline=[
     {
       '$match': {
@@ -843,7 +870,13 @@ console.log(req.body  )
       '$project': {
         'lote': 1, 
         'vence': 1,
-        'nombreProveedor': 1
+        'nombreProveedor': 1,
+        'fechaw':1
+      }
+    },{
+      '$addFields':{
+        'compuesto': false,
+        'copyPool' : []
       }
     }
   ];
@@ -871,8 +904,13 @@ console.log(req.body  )
       '$project': {
         'lote': '$loteOut', 
         'vence': 1, 
-        'esPlanilla':1,
-        'nombreProveedor': 'Producto propio'
+        'nombreProveedor': 'Prod. propio',
+        'fechaw': '$fecha1',
+        'copyPool' : '$lotesPool'
+      }
+    },{
+      '$addFields':{
+        'compuesto': true
       }
     }
   ]
@@ -891,7 +929,7 @@ console.log(req.body  )
   }
   }
 
-  apiCtrl.getPool  = async(req, res) => {
+  apiCtrl.getPool_borrar  = async(req, res) => {
     try {
   const codigo = req.body.loteOut
   console.log(req.body  )
@@ -1079,13 +1117,14 @@ apiCtrl.insumosList  = async(req, res) => {
 apiCtrl.insumo_planilla  = async(req, res) => {
   try {
     
-    const{idDocument, idItem, idLote, loteIn, vence} = req.body;
+    const{idDocument, idItem, idLote, loteIn, vence, compuesto} = req.body;
     console.log(idDocument, idItem);
     await Planilla.updateOne(
       {"_id":idDocument},
         {$set:{ 'detalle.$[est].idLote':idLote,
         'detalle.$[est].loteIn':loteIn,
-        'detalle.$[est].vence':vence
+        'detalle.$[est].vence':vence,
+        'detalle.$[est].compuesto':compuesto
               }
         },
         {arrayFilters:[{"est._id":idItem}]}
@@ -1354,6 +1393,11 @@ apiCtrl.procesosList  = async(req, res) => {
       {
         '$match': {
           'siFormulaOk': true
+        }
+      },{
+        '$sort': {
+          'categoria': 1, 
+          'nombre': 1
         }
       }, {
         '$unwind': {
@@ -1926,6 +1970,8 @@ apiCtrl.una_formula = async(req, res) => {
       if(aggLotes.length == 1){
         aggres[i].detalle.loteIn = aggLotes[0].lote;
         aggres[i].detalle.vence = aggLotes[0].vence;
+        aggres[i].detalle.compuesto = false;
+        aggres[i].copyPool = [];
       }
 
 
@@ -1942,7 +1988,8 @@ apiCtrl.una_formula = async(req, res) => {
           '$project': {
             '_id': 0, 
             'lote': '$loteOut', 
-            'vence': 1
+            'vence': 1,
+            'lotesPool':1
           }
         }
       ]
@@ -1950,6 +1997,8 @@ apiCtrl.una_formula = async(req, res) => {
       if(aggLotesPI.length == 1){
         aggres[i].detalle.loteIn = aggLotesPI[0].lote;
         aggres[i].detalle.vence = aggLotesPI[0].vence;
+        aggres[i].detalle.compuesto = true;
+        aggres[i].copyPool = aggLotesPI[0].lotesPool ;
       }
 
 

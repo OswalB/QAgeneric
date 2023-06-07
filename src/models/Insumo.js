@@ -24,6 +24,11 @@ const InsumoSchema = new Schema({
         type: 'number',
         default: 0,
         alias: 'dias auto vence'
+    },
+    trazable:{
+        type: 'boolean',
+        default: true,
+        alias: 'Trazable'
     }
 },{
     timestamps: true,
