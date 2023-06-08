@@ -147,7 +147,13 @@ function panelToConfig(){
     page.ordenPor = document.getElementById('ordenpor').value;
     page.sortAsc = document.getElementById('checkAsc').checked;
     page.filterBy = document.getElementById('filtroPor').value;
-    page.filterTxt = document.getElementById('in-filter').value;
+    if(page.filterBy == '0'){
+        document.getElementById('in-filter').value = '';
+        page.filterTxt = '';
+    }else{
+        page.filterTxt = document.getElementById('in-filter').value;
+    }
+    
 }
 
 async function footer(){
