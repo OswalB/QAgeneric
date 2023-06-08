@@ -206,10 +206,6 @@ $('#pedidodrop').modal('show');
 
 })
 
-document.addEventListener('DOMContentLoaded',async() =>{
-    
-    
-});
 
     
 
@@ -411,6 +407,7 @@ document.addEventListener('DOMContentLoaded',async() =>{
 
 
 async function init(){
+    document.getElementById('title-main').innerHTML='El Mana - Pedidos';
     filterPag.myClientes = true;
     currentKeys =[{campo: 'client', alias: 'Cliente', tipo: 'string'}];
     filterPag.modelo = 'Order';

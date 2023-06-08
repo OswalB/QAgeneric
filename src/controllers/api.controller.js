@@ -1319,7 +1319,7 @@ apiCtrl.my_orders = async(req, res) => {
         fx.errorlog('my_orders',JSON.stringify(req.body), e, req.user);
         let result = [];
         result.push({"fail" : true});
-        res.json('contaa',result.length);
+        res.json(result);
         console.log(e);
     }
 }

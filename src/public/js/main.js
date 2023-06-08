@@ -122,6 +122,7 @@ function configToPanel(){
 
     document.getElementById('ordenpor').value =  page.ordenPor;
     document.getElementById('checkAsc').checked = page.sortAsc;
+    document.getElementById('checkDsc').checked = !page.sortAsc;
     document.getElementById('filtroPor').value = page.filterBy;
     document.getElementById('in-filter').value = page.filterTxt;
 }

@@ -272,48 +272,56 @@ document.getElementById('inLote').addEventListener('change',async e => {
 //---------funciones
 
 async function init(){
-    document.getElementById('title-main').innerHTML='El Mana - Almacen'
+    document.getElementById('title-main').innerHTML='El Mana - Almacen';
     page.szItems = 15;
     page.ordenPor = 'createdAt';
     page.sortAsc = false;
     page.filterBy = '0';
     page.filterTxt = '';
-
-
+    filterPag.modelo = 'Inalmacen'; 
+    currentKeys =[
+        {campo: 'nombreProveedor', alias: 'Proveedor', tipo: 'string'},
+        {campo: 'createdAt', alias: 'Fecha', tipo: 'date'},
+        {campo: 'insumo.nombre', alias: 'Insumo', tipo: 'string'},
+        {campo: 'lote', alias: 'Lote', tipo: 'string'}
+    ];
+    setPaso(0); 
+    
     //document.getElementById('ordenpor').value='createdAt';
     //filterPag.sortBy ='createdAt';
     //document.getElementById('checkDsc').checked=true;
     //filterPag.sortAsc = false;
 
-    setPaso(0); 
-    filterPag.modelo = 'Inalmacen'; 
+    
+    
     //filterPag.nofact=true;
     //filterPag.saltar=0;
     //filterPag.limitar=15;
     //filterPag.sortBy = 'createdAt';
     //filterPag.sortAsc = false;
-    currentKeys =[{campo: 'nombreProveedor', alias: 'Proveedor', tipo: 'string'},
-    {campo: 'createdAt', alias: 'Fecha', tipo: 'date'}];
+    
     
     //document.getElementById('ordenpor').value='createdAt';
     
     
+    
+
+
+}
+
+async function afterLoad(){
     await loadlistas();
     renderProveedores('');
     renderInsumos();
 
     renderTable()
-
-
 }
-
-function afterLoad(){}
 
 function setPaso(paso){
     let state = '';
     if(paso < 1){
         //renderTable();
-        this.clearFields();
+        clearFields();
         document.getElementById('step00').style.display = '';
         state = 'none';
         
@@ -344,7 +352,7 @@ function setPaso(paso){
 }
 
 async function renderTable(){
-    document.getElementById('ordenpor').value='createdAt';
+   /* document.getElementById('ordenpor').value='createdAt';
     filterPag.sortBy ='createdAt';
     document.getElementById('checkDsc').checked=true;
     filterPag.sortAsc = false;
@@ -357,7 +365,7 @@ async function renderTable(){
     
     
     document.getElementById('ordenpor').value='createdAt';
-
+    */
     
     let res = await fetch('/editor/content', {    
         headers: {
@@ -521,12 +529,12 @@ function fechaFormated(fecha, op){
 
 function clearFields() {
     document.getElementById('inInsumo').disabled = false;
-    let grupo = document.getElementsByClassName('form-control');
+    let grupo = document.getElementsByClassName('form-control-a');
         for(let i = 0; i < grupo.length; i++){
             grupo[i].value = '';
             grupo[i].innerText = '';
         }
-        grupo = document.getElementsByClassName('form-select');
+        grupo = document.getElementsByClassName('form-select-a');
         for(let i = 0; i < grupo.length; i++){
             grupo[i].value = '-1';
         }
