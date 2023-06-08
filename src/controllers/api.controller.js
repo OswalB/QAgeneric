@@ -1441,18 +1441,18 @@ apiCtrl.procesosList  = async(req, res) => {
 apiCtrl.production_table  = async(req, res) => {
   try {
     const{administrador, despachador, vendedor, salesGroup, phone} = req.user;
-        const {bandera, flanco, myClientes, limitar, saltar} = req.body;
+        const {bandera, flanco, myClientes, limitar, saltar, sortBy, sortAsc} = req.body;
         let filterTxt =req.body.filterTxt;
         let filterBy = req.body.filterBy;
         
         let pipeline = [];
         if(filterBy != ''){
           pipeline.push({'$match': {[filterBy]: {'$regex': new RegExp(filterTxt, 'i')}}})
-      }    
-      pipeline.push({'$sort': {'createdAt': -1}});
+        }   
+      let ordenAsc = sortAsc?1:-1;   
+      pipeline.push({'$sort': {[sortBy]: ordenAsc}});
       pipeline.push({'$skip': saltar});
       pipeline.push({'$limit': limitar});
-      
       //pipeline.push({'$project': {'state': 1,'totalReq': 1,'TotalDisp': 1,'delivery': 1,'client':1}});
   
       
@@ -1750,7 +1750,7 @@ apiCtrl.render_changepass = async(req, res) => {
 }
 
 apiCtrl.render_produccion = async(req, res) => {
-    const panel = {"titulo":"Productos pendientes"};
+    const panel = {"titulo":"Productos pendientes", "boton-pagination":true};
     res.render('produccion/pendientes',{panel});
 }
 

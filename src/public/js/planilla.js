@@ -537,16 +537,30 @@ document.getElementById('userModal').addEventListener('shown.bs.modal', e => {
 
 
 async function init(){
-    
+    document.getElementById('title-main').innerHTML='El Mana Planillas';
     filterPag.modelo = 'Planilla';
-    document.getElementById('ordenpor').value='createdAt';
-    filterPag.sortBy ='createdAt';
-    document.getElementById('checkDsc').checked=true;
-    filterPag.sortAsc = false;
-    filterPag.saltar=0;
-    filterPag.limitar=15;
+    page.szItems = 15;
+    page.ordenPor = 'createdAt';
+    page.sortAsc = false;
+    page.filterBy = '0';
+    page.filterTxt = '';
+    currentKeys =[
+        {campo: 'codigoProducto', alias: 'Codigo', tipo: 'string'},
+        {campo: 'producto', alias: 'Peoducto', tipo: 'string'},
+        {campo: 'loteOut', alias: 'Lote', tipo: 'string'},
+        {campo: 'operario', alias: 'Operario', tipo: 'string'},
+        {campo: 'createdAt', alias: 'Fecha', tipo: 'date'},
+        {campo: 'formulaOk', alias: 'Estado', tipo: 'boolean'}
+        
+    ];
 
+    
+    
+    
+    
+}
 
+async function afterLoad(){
     insumosList = await fetch("/control/insumos_list",{
         headers: {'content-type': 'application/json'},
         method: 'GET',
@@ -556,20 +570,16 @@ async function init(){
 
     flags.siChangeH = false;    // cambio en la cabecera de la planilla
     flags.prevKeyH = '',flags.prev_id='';
-    currentKeys =[{campo: 'nombreProveedor', alias: 'Proveedor', tipo: 'string'},
-    
-    {campo: 'createdAt', alias: 'Fecha', tipo: 'date'},
-    ];
     const data = await fetch('/produccion/procesos_list');
     procesos  = await data.json();
     response = await fetch('/api/operarios'); 
     opers = await response.json();
-    
-    
-}
+    renderTable();
+
+} 
 
 async function renderTable() {
-    
+    console.log(filterPag);
     const res = await fetch("/produccion/ordenes",{
         headers: {
             'Content-Type': 'application/json'
