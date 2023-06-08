@@ -217,7 +217,6 @@ async function init(){
     filterPag.nofact=true;
     currentKeys =[
         {campo: 'client', alias: 'Cliente', tipo: 'string'},
-        {campo: 'createdAt', alias: '5', tipo: 'string'},
         {campo: 'orderItem.code', alias: 'Codigo', tipo: 'string'},
         {campo: 'lote', alias: 'Lote', tipo: 'string'}
     ];

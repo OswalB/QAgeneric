@@ -70,7 +70,7 @@ document.getElementById('btn_guardar').addEventListener('click',async e =>{
         filterPag.sortBy='codigoProd';
         filterPag.sortAsc=true;
     //service.footer();  // Paginacion inicial
-    service.renderTable();
+    renderTable();
     }else{
         toastr.error('Codigo duplicado!');
     }
@@ -171,11 +171,11 @@ document.getElementById('accordionMain').addEventListener('click',async e =>{
 })
 
 document.addEventListener('DOMContentLoaded',async() =>{
-    filterPag.myClientes = false;//contador de registros solo mis clientes 
-    filterPag.modelo = 'Formula'; 
+     
+    
     currentKeys =[{campo: 'nombre', alias: 'Prodcto', tipo: 'string'},
     {campo: 'codigoProd', alias: 'Codigo', tipo: 'string'},{campo: 'siFormulaOk',alias:'formula_ok',tipo:'boolean'}]; 
-    insumosLolad();
+    
 })
 
 async function renderTable(){
@@ -211,11 +211,26 @@ async function renderTable(){
         });
 }
 
-function init(){
-    document.getElementById('ordenpor').value='codigoProd';
-    filterPag.sortBy ='codigoProd';
-    document.getElementById('checkDsc').checked=true;
-    filterPag.sortAsc = false;
+async function init(){
+    document.getElementById('title-main').innerHTML='El Mana Formulas';
+    page.szItems = 15;
+    page.ordenPor = 'codigoProd';
+    page.sortAsc = false;
+    page.filterBy = '0';
+    page.filterTxt = '';
+    filterPag.modelo = 'Formula'; 
+    currentKeys =[
+        {campo: 'nombre', alias: 'Formula', tipo: 'string'},
+        {campo: 'categoria', alias: 'Categoria', tipo: 'string'},
+        {campo: 'codigoProd', alias: 'Codigo', tipo: 'string'}
+    ];
+
+
+}
+
+async function afterLoad(){
+    await insumosLolad();
+    renderTable();
 }
 
 function rendItemsAccordion(itemAcc, i){
